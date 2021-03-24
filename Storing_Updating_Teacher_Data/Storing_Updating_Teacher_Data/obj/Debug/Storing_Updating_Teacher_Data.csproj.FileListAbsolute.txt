@@ -1,0 +1,7 @@
+C:\Users\prashank_kumar_jain\Desktop\.NET FSD Training\Assessment\Storing_Updating_Teacher_Data\Storing_Updating_Teacher_Data\bin\Debug\Storing_Updating_Teacher_Data.exe.config
+C:\Users\prashank_kumar_jain\Desktop\.NET FSD Training\Assessment\Storing_Updating_Teacher_Data\Storing_Updating_Teacher_Data\bin\Debug\Storing_Updating_Teacher_Data.exe
+C:\Users\prashank_kumar_jain\Desktop\.NET FSD Training\Assessment\Storing_Updating_Teacher_Data\Storing_Updating_Teacher_Data\bin\Debug\Storing_Updating_Teacher_Data.pdb
+C:\Users\prashank_kumar_jain\Desktop\.NET FSD Training\Assessment\Storing_Updating_Teacher_Data\Storing_Updating_Teacher_Data\obj\Debug\Storing_Updating_Teacher_Data.csprojAssemblyReference.cache
+C:\Users\prashank_kumar_jain\Desktop\.NET FSD Training\Assessment\Storing_Updating_Teacher_Data\Storing_Updating_Teacher_Data\obj\Debug\Storing_Updating_Teacher_Data.csproj.CoreCompileInputs.cache
+C:\Users\prashank_kumar_jain\Desktop\.NET FSD Training\Assessment\Storing_Updating_Teacher_Data\Storing_Updating_Teacher_Data\obj\Debug\Storing_Updating_Teacher_Data.exe
+C:\Users\prashank_kumar_jain\Desktop\.NET FSD Training\Assessment\Storing_Updating_Teacher_Data\Storing_Updating_Teacher_Data\obj\Debug\Storing_Updating_Teacher_Data.pdb
