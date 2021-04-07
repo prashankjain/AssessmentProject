@@ -8,90 +8,223 @@ using System.Data;
 
 namespace Storing_Updating_Teacher_Data
 {
-    public class TeacherDetail 
+    public class TeacherDetail
     {
-        public int tId;
-        public string tName;
-        public string className;
-        public char section;
+        public int tId { get; set; }
+        public string tName { get; set; }
+        public string className { get; set; }
+        public char section { get; set; }
 
         public TeacherDetail()
         {
-
         }
-
     }
 
-    
     class TeachersDataModification
     {
-        string filePath = "c:\\examples\\test.txt";
-        public string Store(TeacherDetail teacherDetail)
+        string filePath = "c:\\Teachers_Data\\teachersData.txt";
+
+        public void FileCreation()
         {
-            StreamWriter OurStream;
-            OurStream = File.AppendText(filePath);
-            OurStream.WriteLine(teacherDetail.tId + ":" + teacherDetail.tName + ":" + teacherDetail.className + ":" + teacherDetail.section);
-            //OurStream.WriteLine("\n");
-            OurStream.Close();
-            Console.WriteLine("Records is stored successfully..");
-            return "Data is stored";
+            try
+            {
+                StreamWriter OurStream;
+                OurStream = File.AppendText(filePath);
+                OurStream.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+
+        }
+        public bool Store(TeacherDetail teacherDetail)
+        {
+            try
+            {
+                if (File.Exists(filePath))
+                {
+                    if (File.ReadAllText(filePath).Length > 0)
+                    {
+                        if (File.ReadAllText(filePath).Contains(teacherDetail.tId.ToString()))
+                        {
+                            Console.WriteLine("This ID is already exist, please enter a new ID.");
+                        }
+                        return false;
+                    }
+                    else
+                    {
+                        StreamWriter OurStream;
+                        OurStream = File.AppendText(filePath);
+                        OurStream.WriteLine(teacherDetail.tId + "," + teacherDetail.tName + "," + teacherDetail.className + "," + teacherDetail.section);
+                        OurStream.Close();
+                        Console.WriteLine("Record is stored successfully........");
+                        return true;
+                    }
+                }
+                else
+                {
+                    FileCreation();
+                    Store(teacherDetail);
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return true;
         }
 
-        public string update(TeacherDetail teacherDetail)
+        public bool Update(TeacherDetail teacherDetail)
         {
-
-            DataTable dt = ConvertToDataTable(filePath, 100);
-
-            foreach (var row in dt.Rows)
+            bool returnVal = false;
+            try
             {
-                DataRow dataRow = 
+                if (!File.Exists(filePath))
+                {
+                    Console.WriteLine("File is not Exist");
+                    return false;
+                }
+                else
+                {
+                    if (!File.ReadAllText(filePath).Contains(teacherDetail.tId.ToString()))
+                    {
+                        Console.WriteLine("This ID is NOT exist, please enter a valid ID.");
+                        return false;
+                    }
+                    else
+                    {
+                        DataTable table = new DataTable();
+                        var fileContents = File.ReadAllLines(filePath);
+                        var splitFileContents = (from f in fileContents select f.Split(',')).ToArray();
+                        StreamWriter OurStream;
+                        File.Delete(filePath);
+                        foreach (var line in splitFileContents)
+                        {
+                            if (!string.IsNullOrWhiteSpace(line[0]))
+                            {
+                                if (line[0] == teacherDetail.tId.ToString())
+                                {
+                                    line[1] = teacherDetail.tName;
+                                    line[2] = teacherDetail.className;
+                                    line[3] = teacherDetail.section.ToString();
+                                }
+                                OurStream = File.AppendText(filePath);
+                                OurStream.WriteLine(line[0] + "," + line[1] + "," + line[2] + "," + line[3]);
+                                OurStream.Close();
+                            }
+                        }
+                        Console.WriteLine("Records is updated successfully.......");
+                        return false;
+                    }
+                }
             }
-
-            return "ok";
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return returnVal;
         }
 
-        public DataTable ConvertToDataTable(string filePath, int numberOfColumns)
+        public TeacherDetail Retrieve(int ID)
         {
-            DataTable table = new DataTable();
-            var fileContents = File.ReadAllLines(filePath);
-
-            var splitFileContents = (from f in fileContents select f.Split(':')).ToArray();
-
-            int maxLength = (from s in splitFileContents select s.Count()).Max();
-
-            for (int i = 0; i < maxLength; i++)
+            TeacherDetail teacherDetail = new TeacherDetail();
+            try
             {
-                table.Columns.Add();
+                
+                if (!File.Exists(filePath))
+                {
+                    Console.WriteLine("File is not Exist");
+                    return teacherDetail;
+                }
+                else
+                {
+                    if (!File.ReadAllText(filePath).Contains(ID.ToString()))
+                    {
+                        Console.WriteLine("This ID is NOT exist, please enter a valid ID to retrieve the data.");
+                    }
+                    else
+                    {
+                        DataTable table = new DataTable();
+                        var fileContents = File.ReadAllLines(filePath);
+                        var splitFileContents = (from f in fileContents select f.Split(',')).ToArray();
+                        foreach (var line in splitFileContents)
+                        {
+                            if (!string.IsNullOrWhiteSpace(line[0]))
+                            {
+                                if (line[0] == ID.ToString())
+                                {
+                                    teacherDetail.tName = line[1];
+                                    teacherDetail.className = line[2];
+                                    teacherDetail.section = Convert.ToChar(line[3]);
+                                }
+                            }
+                        }
+                    }
+                   // return teacherDetail;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
 
-            foreach (var line in splitFileContents)
-            {
-                DataRow row = table.NewRow();
-                row.ItemArray = (object[])line;
-                table.Rows.Add(row);
+            return teacherDetail;
+
+        }
+
+
+        public void RetrieveAll()
+        {
+            try
+            {                
+                StreamReader sr = new StreamReader(filePath);
+
+                if (!File.Exists(filePath))
+                    Console.WriteLine("File is not Exist");
+                else
+                {
+                    string allRecords = sr.ReadLine(); ;
+                    Console.WriteLine("The content of file {0}:", filePath);
+
+                    while (allRecords != null)
+                    {
+                        Console.WriteLine(allRecords);
+                        allRecords = sr.ReadLine();
+                    }
+                    sr.Close();
+                }
             }
-            //DataTable tbl = new DataTable();
+             catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
 
-            //for (int col = 0; col < numberOfColumns; col++)
-            //    tbl.Columns.Add(new DataColumn("Column" + (col + 1).ToString()));
-
-
-            //string[] lines = System.IO.File.ReadAllLines(filePath);
-
-            //foreach (string line in lines)
-            //{
-            //    var cols = line.Split(':');
-
-            //    DataRow dr = tbl.NewRow();
-            //    for (int cIndex = 0; cIndex < 3; cIndex++)
-            //    {
-            //        dr[cIndex] = cols[cIndex];
-            //    }
-
-            //    tbl.Rows.Add(dr);
-            //}
-
-            return table;
+        }
+        public static DataTable convertStringToDataTable(string data)
+        {
+            DataTable dataTable = new DataTable();
+            bool columnsAdded = false;
+            foreach (string row in data.Split('$'))
+            {
+                DataRow dataRow = dataTable.NewRow();
+                foreach (string cell in row.Split('|'))
+                {
+                    string[] keyValue = cell.Split(',');
+                    if (!columnsAdded)
+                    {
+                        DataColumn dataColumn = new DataColumn(keyValue[0]);
+                        dataTable.Columns.Add(dataColumn);
+                    }
+                    dataRow[keyValue[0]] = keyValue[1];
+                }
+                columnsAdded = true;
+                dataTable.Rows.Add(dataRow);
+            }
+            return dataTable;
         }
     }
 }

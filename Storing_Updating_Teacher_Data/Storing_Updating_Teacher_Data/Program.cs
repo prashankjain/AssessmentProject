@@ -11,64 +11,101 @@ namespace Storing_Updating_Teacher_Data
     {
         static void Main(string[] args)
         {
-            TeachersDataModification teachersData = new TeachersDataModification();
+            string folderName = @"c:\Teachers_Data";
+            string pathString = System.IO.Path.Combine(folderName);
+            System.IO.Directory.CreateDirectory(pathString);
+
+            char continueOrNot = 'Y';
             int option = 0;
+            TeachersDataModification teachersData = new TeachersDataModification();
             TeacherDetail teacherDetail = new TeacherDetail();
-//            int ID; string Name; string className; char section;
             Console.WriteLine("----------------------------------------------------------------");
-            Console.WriteLine("THis is a Rainbow School Teacher's Data Management Application.");
+            Console.WriteLine("This is a Rainbow School Teacher's Data Management Application.");
             Console.WriteLine("----------------------------------------------------------------");
-            Console.WriteLine("Select an option to perform:");
-            Console.WriteLine("1. storing the teacher's data");
-            Console.WriteLine("2. updating the teacher's data");
-            Console.WriteLine("3. retriving the teacher's data");
-            Console.WriteLine("Please type a number (1 or 2 or 3) to perform the action??");
-            option = Convert.ToInt32(Console.ReadLine());
-            if (option == 1)
+            try
             {
-                Console.WriteLine("Please Enter the Teacher's data to store");
-                Console.WriteLine("Teacher ID:");
-                teacherDetail.tId = Convert.ToInt32(Console.ReadLine());
-                Console.WriteLine("Teacher Name:");
-                teacherDetail.tName = Console.ReadLine();
-                Console.WriteLine("Teacher Classname:");
-                teacherDetail.className = Console.ReadLine();
-                Console.WriteLine("Teacher section:");
-                teacherDetail.section = Convert.ToChar(Console.ReadLine());
+                while (char.ToUpper(continueOrNot) == 'Y')
+                {
+                    Console.WriteLine("Select an option to perform:");
+                    Console.WriteLine("1. Store the teacher's data");
+                    Console.WriteLine("2. Update the teacher's data");
+                    Console.WriteLine("3. Retrieve a teacher's data");
+                    Console.WriteLine("4. Retrieve complete data");
+                    Console.WriteLine(">>>>> Please type a number (1 or 2 or 3 or 4) to perform the action??");
+                    try
+                    {
+                        option = Convert.ToInt32(Console.ReadLine());
+                        if (option == 1)
+                        {
+                            Console.WriteLine(">>>>> Please Enter the Teacher's data to store");
+                            Console.WriteLine(">> Teacher ID:");
+                            teacherDetail.tId = Convert.ToInt32(Console.ReadLine());
+                            Console.WriteLine(">> Teacher Name:");
+                            teacherDetail.tName = Console.ReadLine();
+                            Console.WriteLine(">> Teacher Classname:");
+                            teacherDetail.className = Console.ReadLine();
+                            Console.WriteLine(">> Teacher section:");
+                            teacherDetail.section = Convert.ToChar(Console.ReadLine());
+                            bool result = teachersData.Store(teacherDetail);
+                        }
+                        else if (option == 2)
+                        {
+                            Console.WriteLine(">>>>> Please Enter the Teacher's data to update (record will update based on the ID)");
+                            Console.WriteLine(">> Teacher ID:");
+                            teacherDetail.tId = Convert.ToInt32(Console.ReadLine());
+                            Console.WriteLine(">> Teacher Name:");
+                            teacherDetail.tName = Console.ReadLine();
+                            Console.WriteLine(">> Teacher Classname:");
+                            teacherDetail.className = Console.ReadLine();
+                            Console.WriteLine(">> Teacher section:");
+                            teacherDetail.section = Convert.ToChar(Console.ReadLine());
+                            bool result = teachersData.Update(teacherDetail);
+                        }
+                        else if (option == 3)
+                        {
+                            Console.WriteLine(">>>>> Please Enter the Teacher's ID to Retrive the details");
+                            Console.WriteLine(">> Teacher ID:");
+                            int Id = Convert.ToInt32(Console.ReadLine());
+                            teacherDetail = teachersData.Retrieve(Id);
+                            if (!string.IsNullOrEmpty(teacherDetail.tName))
+                            {
+                                Console.WriteLine(">> >> Retrived Teacher Name is :" + teacherDetail.tName);
+                                Console.WriteLine(">> >> Retrived Teacher Class(section) is :" + teacherDetail.className + "(" + teacherDetail.section + ")");
+                            }
+                            else
+                            {
+                                //Console.WriteLine("No record found");
+                            }
+                        }
+                        else if (option == 4)
+                        {
+                            teachersData.RetrieveAll();
+                            
+                        }
+                        else
+                        {
+                            Console.WriteLine(">> invalid option, Please select a valid option from 1 , 2, 3 or 4 .....");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                    Console.WriteLine(">> >> >> Do you want to continue ? Y/N");
+                    continueOrNot = Convert.ToChar(Console.ReadLine());
+                }
 
-                Console.WriteLine("Need to call Store function");
-
-                string result = teachersData.Store(teacherDetail);
             }
-            else if (option == 2)
+            catch (Exception ex)
             {
-                Console.WriteLine("Please Enter the Teacher's data to update");
-                Console.WriteLine("Teacher ID:");
-                teacherDetail.tId = Convert.ToInt32(Console.ReadLine());
-                Console.WriteLine("Teacher Name:");
-                teacherDetail.tName = Console.ReadLine();
-                Console.WriteLine("Teacher Classname:");
-                teacherDetail.className = Console.ReadLine();
-                Console.WriteLine("Teacher section:");
-                string result = teachersData.update(teacherDetail);
+                Console.WriteLine(ex.Message);
             }
-            else if (option == 3)
+            finally
             {
-                Console.WriteLine("Need to call Read function");
+                Console.WriteLine(">> >> Thank you !!! << <<");
+                Console.WriteLine("Please press Enter to close this window ...................");
+                Console.ReadKey();
             }
-            else
-            {
-                Console.WriteLine("invalid option");
-            }
-
-            Console.ReadKey();
-
-            //            StreamWriter OurStream;
-            ////          OurStream = File.CreateText("c:\\examples\\test.txt");
-            //            OurStream = File.AppendText("c:\\examples\\test.txt");
-            //            OurStream.WriteLine("This is a line of text");
-            //            OurStream.Close();
-            //            Console.WriteLine("Created File!");
         }
     }
 }
