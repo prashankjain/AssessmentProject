@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Storing_Updating_Teacher_Data
 {
+    /// <summary>
+    /// Main method, execution will start from heres
+    /// </summary>
     class Program
     {
         static void Main(string[] args)

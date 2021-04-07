@@ -8,6 +8,14 @@ using System.Data;
 
 namespace Storing_Updating_Teacher_Data
 {
+    /// <summary>
+    ///  Containing four variables to store 
+    ///  Teacher’s ID (int)
+    ///  Name (string)
+    ///  Class (string) 
+    ///  and Section (char)   
+    /// </summary>
+    
     public class TeacherDetail
     {
         public int tId { get; set; }
@@ -20,10 +28,21 @@ namespace Storing_Updating_Teacher_Data
         }
     }
 
+    /// <summary>
+    /// Containing methods which will be using to 
+    ///    a.File Creation
+    ///    b.Storing
+    ///    c.Retrieving
+    ///    d.Updating
+    ///    e.Retrieving all records
+    /// </summary>
     class TeachersDataModification
     {
         string filePath = "c:\\Teachers_Data\\teachersData.txt";
 
+        /// <summary>
+        /// Created this method to create the file if program executes very first time in any machine.
+        /// </summary>
         public void FileCreation()
         {
             try
@@ -36,9 +55,13 @@ namespace Storing_Updating_Teacher_Data
             {
                 Console.WriteLine(ex.Message);
             }
-
-
         }
+        /// <summary>
+        /// Created this method to store the teacher’s details in text file.
+        /// </summary>
+        /// <param name="teacherDetail"></param>
+        /// <returns></returns>
+
         public bool Store(TeacherDetail teacherDetail)
         {
             try
@@ -57,7 +80,13 @@ namespace Storing_Updating_Teacher_Data
                     {
                         StreamWriter OurStream;
                         OurStream = File.AppendText(filePath);
-                        OurStream.WriteLine(teacherDetail.tId + "," + teacherDetail.tName + "," + teacherDetail.className + "," + teacherDetail.section);
+                        OurStream.WriteLine(teacherDetail.tId
+                            + ","
+                            + teacherDetail.tName
+                            + ","
+                            + teacherDetail.className
+                            + ","
+                            + teacherDetail.section);
                         OurStream.Close();
                         Console.WriteLine("Record is stored successfully........");
                         return true;
@@ -76,6 +105,12 @@ namespace Storing_Updating_Teacher_Data
             }
             return true;
         }
+
+        /// <summary>
+        /// Created this method to update the teacher’s details based on provided teacher’s ID in text file
+        /// </summary>
+        /// <param name="teacherDetail"></param>
+        /// <returns></returns>
 
         public bool Update(TeacherDetail teacherDetail)
         {
@@ -128,12 +163,17 @@ namespace Storing_Updating_Teacher_Data
             return returnVal;
         }
 
+        /// <summary>
+        /// Created this method to retrieve the teacher’s details based on provided  teacher’s ID from text file
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <returns></returns>
         public TeacherDetail Retrieve(int ID)
         {
             TeacherDetail teacherDetail = new TeacherDetail();
             try
             {
-                
+
                 if (!File.Exists(filePath))
                 {
                     Console.WriteLine("File is not Exist");
@@ -163,7 +203,6 @@ namespace Storing_Updating_Teacher_Data
                             }
                         }
                     }
-                   // return teacherDetail;
                 }
 
             }
@@ -176,11 +215,13 @@ namespace Storing_Updating_Teacher_Data
 
         }
 
-
+        /// <summary>
+        /// Created this method to retrieve all the teacher’s details from text file
+        /// </summary>
         public void RetrieveAll()
         {
             try
-            {                
+            {
                 StreamReader sr = new StreamReader(filePath);
 
                 if (!File.Exists(filePath))
@@ -198,33 +239,10 @@ namespace Storing_Updating_Teacher_Data
                     sr.Close();
                 }
             }
-             catch (Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-
-        }
-        public static DataTable convertStringToDataTable(string data)
-        {
-            DataTable dataTable = new DataTable();
-            bool columnsAdded = false;
-            foreach (string row in data.Split('$'))
-            {
-                DataRow dataRow = dataTable.NewRow();
-                foreach (string cell in row.Split('|'))
-                {
-                    string[] keyValue = cell.Split(',');
-                    if (!columnsAdded)
-                    {
-                        DataColumn dataColumn = new DataColumn(keyValue[0]);
-                        dataTable.Columns.Add(dataColumn);
-                    }
-                    dataRow[keyValue[0]] = keyValue[1];
-                }
-                columnsAdded = true;
-                dataTable.Rows.Add(dataRow);
-            }
-            return dataTable;
         }
     }
 }
